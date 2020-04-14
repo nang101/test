@@ -1,0 +1,234 @@
+[[--meta--]]
+[[--heranew_header--]]
+[[--RecordStart,pageType--]]product[[--RecordEnd--]] . <!-- pageType-->
+<link rel="stylesheet" href="[[--CatAddress,snhercz_css,form:1--]]"> <!-- style.css -->
+<link rel="stylesheet" href="[[--CatAddress,snhercz_css,form:6--]]"> <!-- style.css -->
+<script>
+    var tplId = "13820";
+</script>
+<!-- PDP :: Start -->
+<link rel="stylesheet" href="[[--CatAddress,snhercz_css,form:4--]]"><!-- style.css 다음에 product.css 링크 삽입 -->
+<main id="main" class="main product">
+    <!-- 产品大图部分 :: S -->
+    [[--prd_head--]]
+    <!-- 产品大图部分 :: E -->
+
+    <!-- FIND YOUR COLOR (with Tab) :: S -->
+    [[--prd_slick--]]
+    <!-- FIND YOUR COLOR (with Tab) :: E -->
+
+    <!-- Tab :: S -->
+    [[--prd_tabs--]]
+    <!-- Tab :: E -->
+
+    <!--HTML free컴포넌트 사용여부-->
+    [[--prd_banner--]]
+    <!--픽슬리 사용여부-->
+
+
+    <!-- #HERA MOMENTS :: S -->
+    <!-- #HERA MOMENTS :: E -->
+
+    <!-- 评价 :: S -->
+    <!-- 评价 :: E -->
+
+    <script type="text/javascript">
+      window.PixleeAsyncInit = function() {
+        Pixlee.init({
+            apiKey:'oUmM0uIiFOyAAtg6JKYd'
+        });
+        Pixlee.addSimpleWidget({widgetId:1353260});
+      };
+    </script>
+    <script src="//assets.pixlee.com/assets/pixlee_widget_1_0_0.js"></script>
+    <!-- 猜你喜欢 :: S -->
+    [[--prd_related--]]
+    <!-- 猜你喜欢 :: E -->
+</main>
+[[--prd_comment--]]	
+<script src="[[--CatAddress,snhercz_js,form:13--]]"></script>
+<script>
+    $(function(){
+        var $goMall = $('#q-go-mall');
+        var isMobile =  typeof window.mobileAndTabletcheck === 'function' && window.mobileAndTabletcheck() && $('#gnb').is(':hidden');
+
+        function setApMallLink(){
+            var sap = $goMall.data('code') || '';
+
+            var isSucc = false;
+            var target ='';
+
+            if ( sap !== '' ){
+                var btype =  'W';
+                if ( isMobile){
+                    btype = "M";
+                }
+
+                $.ajax({
+                    type : 'GET',
+                    url : $goMall.data('api'),
+                    data : {'sapcd' : sap,'type': btype } ,
+                    dataType : 'json',
+                    success: function(data){
+                        var r = data.status;
+                        if ( r === 'succ'){
+                            isSucc = true;
+                            target = data.object.url || '';
+
+                            // if ( target.indexOf("http") !== 0 ){
+                            // target = "http://" + target;
+                            // }
+
+                            $goMall.attr('href', target);
+                        } else {
+                            mallDefault();
+                        }
+                    }, fail : function(){
+                        mallDefault();
+                    }
+                });
+            } else {
+                mallDefault();
+            }
+
+            $goMall.data('is-done','Y');
+        }
+
+        function mallDefault(){
+            if (isMobile ){
+                $goMall.attr('href', $goMall.data('mobile-main'));
+            }
+        }
+
+
+        setApMallLink();
+
+        $goMall.click( function(e){
+            var isDone = $(this).data('is-done') === "Y";
+            if ( !isDone){
+                e.preventDefault();
+                setApMallLink();
+                window.open($(this).attr('href'), '_blank', '새창');
+            }
+        });
+
+    });
+</script>
+<script>
+    var prdtCd = "111570004";
+    var prdtSn = "";
+    var reviewPg = 1;
+    var prdtNm="블랙 파운데이션";
+
+    function reviewList(sortFl) {
+        if(sortFl == 'Y'){
+            $('.listBtnN').removeClass('selected');
+            $('.listBtnY').addClass('selected');
+        } else {
+            $('.listBtnY').removeClass('selected');
+            $('.listBtnN').addClass('selected');
+        }
+        REVIEW.prdtlist(1, prdtCd, prdtSn, prdtNm, sortFl);
+    }
+
+    function reviewClose() {
+        if(confirm("제품 리뷰 작성을 정말 취소 하시겠습니까?")){
+            $('.wt_stars button').each(function (index, item) {
+                $(item).addClass('on');
+            });
+
+            $('textarea[id=wt_review]').val('');
+            $('.sum').html('0');
+
+            $('.cta_wrap button').removeAttr("onclick");
+            $('.cta_wrap button').attr("onclick", "javascript:writeReview();");
+
+            $('.modal_layer.wt_dim').css("display","none");
+        } else {
+            return false;
+        }
+    }
+
+
+    $(function () {
+        //prdsn 이 세팅되어있다면 가져오고싶은 리뷰가 있는상태
+        //없다면 apmall api를 받아와서 세팅후 넘겨준다
+        if(prdtSn == "" ) {
+            APMALL.getPrdtSn(prdtCd, function(prdtSnResult){
+                prdtSn = prdtSnResult;
+                REVIEW.prdtlist(1, prdtCd, prdtSn, prdtNm, 'Y');
+            });
+        } else {
+            REVIEW.prdtlist(1, prdtCd, prdtSn, prdtNm, 'Y');
+        }
+
+
+
+        $('#wt_review').keyup(function (e){
+            var content = $(this).val();
+            $('.sum').html(content.length);
+            if (content.length > 300){
+                $(this).val(content.substring(0, 300));
+                $('.sum').html( $(this).val().length);
+            }
+        });
+
+    });
+
+    //수정
+    function reviewMod(repSeq) {
+        $(".write_review button").click();
+        $('.wt_stars button').each(function (index, item) {
+            $(item).removeClass('on');
+        });
+
+        var prdtAvg = parseInt($("#cell_01_"+repSeq).val());
+        $('.wt_stars button').each(function (index, item) {
+            if (prdtAvg > index) {
+                $(item).addClass('on');
+            }
+        });
+
+        var contMore = $("#cell_02_"+repSeq).text();
+
+        $('textarea[id=wt_review]').val(contMore);
+        $('.sum').html(contMore.length);
+
+        $('.cta_wrap button').removeAttr("onclick");
+        $('.cta_wrap button').attr("onclick", "javascript:updateReview('"+repSeq+"');");
+    }
+
+    // 리뷰 삭제
+    function reviewDel(repSeq) {
+        REVIEW.delete(1, repSeq, prdtCd, prdtSn);
+    }
+
+    //리뷰 쓰기
+    function writeReview() {
+        REVIEW.create(prdtCd, prdtSn);
+    }
+
+    //리뷰 수정
+    function updateReview(repSeq) {
+        REVIEW.update(prdtCd, prdtSn, repSeq);
+    }
+
+</script>
+<script>
+    var dataLayer = dataLayer || [];
+    var PRD_TYPE_CHK = "makeup";
+    var PRD_CONC_CHK = "";
+    var PRD_LINE_CHK = "페이스";
+
+    var AP_PRD_NAME = "BLACK FOUNDATION";
+    var AP_PRD_CODE = "";
+    var AP_PRD_SAPCODE = "111570004";
+    var AP_PRD_PRICE = "";
+    var AP_PRD_ENBRAND = "HERA";
+    var AP_PRD_ENCATEGORY = PRD_TYPE_CHK.toUpperCase();
+    var AP_PRD_SKINTYPE = PRD_CONC_CHK.toUpperCase();
+    var AP_PRD_PRDLINE = PRD_LINE_CHK.toUpperCase();
+
+    dataLayer.push({'event':'product'});
+</script>
+[[--heranew_footer--]]
